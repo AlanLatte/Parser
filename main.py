@@ -5,15 +5,16 @@ def parser(url, headers):
     with requests.Session() as Session:
         request = Session.get(url, headers=headers)
         if request.status_code==200:
-            urls = get_urls(request, url, attrs={'data-qa': 'vacancy-serp__vacancy'}, tag='div')
+            div = get_tag(request, url, attrs={'data-qa': 'vacancy-serp__vacancy'}, tag='div')
+            for i in range(len(div)):
+                print(div[i].find('a').get('href'))
         else:
             print('server error')
 
-def get_urls(request, url, tag, attrs):
+def get_tag(request, url, tag, attrs):
     soup = bs(request.content,'html.parser')
     div = soup.find_all(tag, attrs)
-    for i in range(len(div)):
-        print(div[i].find('a').get('href'))
+    return div
 
 def main():
     search = quote(input('Search: '))
