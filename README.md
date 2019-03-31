@@ -4,7 +4,7 @@
 >1. __Подключить БД.__
 >>1.1 __Создать чистку данных.__
 >2. __Добавить новые сайты с вакансиями__
->>2.1 1)[Город работ](https://gorodrabot.ru/)
+>>2.1 [Город работ](https://gorodrabot.ru/)
 
 
 ### About:
@@ -20,7 +20,7 @@
 | :------: | :-----: |
 |[*]| bug fixed|
 |[+]| add new feature|
-|[-]| delete|
+|[-]| deletion|
 ---
 ## Contributors:
 | GitHub | Telegram |
