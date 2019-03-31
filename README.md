@@ -1,9 +1,10 @@
 # **Parser**
 
-## Tasks:
-1. __Update Soon.__
-   > Just wait
-
+## Задачи:
+>1. __Подключить БД.__
+>>1.1 __Создать чистку данных.__
+>2. __Добавить новые сайты с вакансиями__
+>>2.1 1)[Город работ](https://gorodrabot.ru/)
 
 ### About:
 
@@ -11,7 +12,7 @@
 >> Our goal is to create a product for analyzing the market __IT__ specialties.
 >
 > __RU__:
->> Наша цель, создать продукт для анализа рынка __IT__ специальностей. 
+>> Наша цель, создать продукт для анализа рынка __IT__ специальностей.
 ---
 ## Requirements for commits.
 |  prefix  |  about  |

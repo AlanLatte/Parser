@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+<<<<<<< HEAD
 
+=======
+>>>>>>> f4c9cb05e0ccaa1fc67f730677d658e27cb9859e
 import requests, sys
 from bs4 import BeautifulSoup
 from urllib.parse import quote
@@ -32,7 +35,11 @@ def hh_parser(url, headers):
                     """
                         type wage   ==  bytes
                     """
+<<<<<<< HEAD
                     #Преобразуем wage в utf-8
+=======
+                    # Преобразуем wage в utf-8
+>>>>>>> f4c9cb05e0ccaa1fc67f730677d658e27cb9859e
                     # TODO: В случае записи в БД, переделать.
                     wage = wage.renderContents().decode('utf-8')
                     # Извлекаем контент
@@ -42,23 +49,48 @@ def hh_parser(url, headers):
                     requirement = data.find('div', attrs={'data-qa': 'vacancy-serp__vacancy_snippet_requirement'}).text
                     #Создаем общую информацию
                     all_data = f'{title}\t{wage}\n{company}\n{responsibility}\n{requirement}\nurl: {href}\n'
+<<<<<<< HEAD
+=======
+                    print("------------Result------------")
+>>>>>>> f4c9cb05e0ccaa1fc67f730677d658e27cb9859e
                     print(all_data)
                 else:
                     wage='Не указанно'
         else:
             print('server error')
 
+<<<<<<< HEAD
 
 def main():
     #Формируем запрос, преобразуем его в url-подобный тип
     search = quote(input('Search: '))
     hh_parser  (
                 url=f'https://hh.ru/search/vacancy?search_period=3&text={search}&area=1',
+=======
+def main():
+    """
+        Структура url:
+        https://hh.ru/search/vacancy    --  дефолт
+        area={area}                     --  Размер ответа (0 -- максимум)
+        search_period={period}          --  Период поиска
+        text={search}                   --  текст поиска
+    """
+    #Формируем запрос, преобразуем его в url-подобный тип
+    search = quote(input('Search: '))
+    area = 0
+    period = 3
+    hh_parser  (
+                url=f'https://hh.ru/search/vacancy?area={area}&search_period={period}&text={search}',
+>>>>>>> f4c9cb05e0ccaa1fc67f730677d658e27cb9859e
                 headers={
                     'accept'     : '*/*',
                     'user-agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36'
                         }
             )
 if __name__ == '__main__':
+<<<<<<< HEAD
     #Вызываем main
+=======
+    #   Вызываем main
+>>>>>>> f4c9cb05e0ccaa1fc67f730677d658e27cb9859e
     main()
