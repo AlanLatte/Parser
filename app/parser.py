@@ -1,31 +1,45 @@
 # -*- coding: utf-8 -*-
-import requests, sys
+import requests, json, os, time
 from bs4 import BeautifulSoup
 from urllib.parse import quote
 
-def hh_parser(url, headers):
+""" Change directory to current """
+os.chdir(os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))))
+
+def hh_parser(url: str, headers: dict, nums_of_answer: int):
     """
         type url        ==  string
         type headers    ==  dict
+        type data       ==  dict
+        type divs       ==  list
     """
     #Открываем сессию.
     with requests.Session() as Session:
         #Отправляем запрос, получаем ответ в виде html
         request = Session.get(url, headers=headers)
+        data =  {
+                'status'        :   str()   ,
+                'timestamp'     :   int()   ,
+                'data_response' :   list()  ,
+                'quantity'      :   int()   ,
+                }
+        data['timestamp'] = int(time.time())
         # Проверяем ответ сервера
         if request.status_code==200:
+            data['status'] = 'ok'
             # Извлекаем контент из request ответа
             soup = BeautifulSoup(request.content, 'html.parser')
             # Извлекаем из контента блок 'div' с артибутами attrs
             divs = soup.find_all('div', attrs={'data-qa': 'vacancy-serp__vacancy'})
-            """
-                type divs   ==  list
-            """
-            for data in divs:
+
+            range_pages = soup.find_all('a', attrs={'class' : 'bloko-button HH-Pager-Control'})
+            for page in range_pages:
+                print(page.get('data-page'))
+            for raw_data in divs:
                 # Извлекаем из пресонализированного тега данные, преобразуем в текст
-                title = data.find('a',attrs={'data-qa': 'vacancy-serp__vacancy-title'}).text
+                title = raw_data.find('a',attrs={'data-qa': 'vacancy-serp__vacancy-title'}).text
                 #Извлекаем зп из html
-                wage = data.find('div', attrs={'data-qa': 'vacancy-serp__vacancy-compensation'})
+                wage = raw_data.find('div', attrs={'data-qa': 'vacancy-serp__vacancy-compensation'})
                 # Если зп не указанна, так и выводим
                 if wage != None:
                     """
@@ -34,38 +48,58 @@ def hh_parser(url, headers):
                     #Преобразуем wage в utf-8
                     # TODO: В случае записи в БД, переделать.
                     wage = wage.renderContents().decode('utf-8')
-                    # Извлекаем контент
-                    href = data.find('a', attrs={'data-qa': 'vacancy-serp__vacancy-title'}).get('href')
-                    company = data.find('a', attrs={'data-qa': 'vacancy-serp__vacancy-employer'}).text
-                    responsibility = data.find('div', attrs={'data-qa': 'vacancy-serp__vacancy_snippet_responsibility'}).text
-                    requirement = data.find('div', attrs={'data-qa': 'vacancy-serp__vacancy_snippet_requirement'}).text
-                    #Создаем общую информацию
-                    all_data = f'{title}\t{wage}\n{company}\n{responsibility}\n{requirement}\nurl: {href}\n'
-                    print("------------Result------------")
-                    print(all_data)
                 else:
                     wage='Не указанно'
+                # Извлекаем контент
+                # TODO: Переработать сбор информации.
+                href = raw_data.find('a', attrs={'data-qa': 'vacancy-serp__vacancy-title'}).get('href')
+                company = raw_data.find('a', attrs={'data-qa': 'vacancy-serp__vacancy-employer'}).text
+                short_responsibility = raw_data.find('div', attrs={'data-qa': 'vacancy-serp__vacancy_snippet_responsibility'}).text
+                requirement = raw_data.find('div', attrs={'data-qa': 'vacancy-serp__vacancy_snippet_requirement'}).text
+                publication_date = raw_data.find('span', attrs={'class' : "vacancy-serp-item__publication-date"}).text
+                # Собираем данные в json формате
+                procces_data =  {
+                                'publication_date': publication_date,
+                                'title' : title,
+                                'wage' : wage,
+                                'company' : company,
+                                'short_responsibility' : short_responsibility,
+                                'url' : href
+                                }
+                # Добавляем в json
+                data['data_response'].append(procces_data)
         else:
-            print('server error')
+            data['status'] = 'false'
+    data['quantity'] = len(data['data_response'])
+    write_json('data', data)
 
+
+def write_json(file_name: str, data: dict):
+    with open(f'{file_name}.json', mode='w', encoding='utf8') as outfile:
+        json.dump(data, outfile, ensure_ascii=False, indent=2)
 def main():
     """
         Структура url:
         https://hh.ru/search/vacancy    --  дефолт
+        order_by={order_by}             --  сортировка по дате
         area={area}                     --  Размер ответа (0 -- максимум)
         search_period={period}          --  Период поиска
         text={search}                   --  текст поиска
     """
     #Формируем запрос, преобразуем его в url-подобный тип
     search = quote(input('Search: '))
-    area = 0
-    period = 3
+
+    area        =   1
+    period      =   7
+    order_by    =   'publication_time'
+
     hh_parser  (
-                url=f'https://hh.ru/search/vacancy?area={area}&search_period={period}&text={search}',
+                url=f'https://hh.ru/search/vacancy?order_by={order_by}&area={area}&search_period={period}&text={search}',
                 headers={
                     'accept'     : '*/*',
                     'user-agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36'
-                        }
+                        },
+                nums_of_answer=40
             )
 if __name__ == '__main__':
     #   Вызываем main
