@@ -30,8 +30,8 @@ def hh_parser(url: str, headers: dict, nums_of_answer: int):
             # Извлекаем контент из request ответа
             soup = BeautifulSoup(request.content, 'html.parser')
             # Извлекаем из контента блок 'div' с артибутами attrs
+            # TODO: Добавить поиск по divs_premium.
             divs = soup.find_all('div', attrs={'data-qa': 'vacancy-serp__vacancy'})
-
             range_pages = soup.find_all('a', attrs={'class' : 'bloko-button HH-Pager-Control'})
             for page in range_pages:
                 print(page.get('data-page'))
@@ -47,7 +47,7 @@ def hh_parser(url: str, headers: dict, nums_of_answer: int):
                     """
                     #Преобразуем wage в utf-8
                     # TODO: В случае записи в БД, переделать.
-                    wage = wage.renderContents().decode('utf-8')
+                    wage = wage.text
                 else:
                     wage='Не указанно'
                 # Извлекаем контент
@@ -56,8 +56,13 @@ def hh_parser(url: str, headers: dict, nums_of_answer: int):
                 company = raw_data.find('a', attrs={'data-qa': 'vacancy-serp__vacancy-employer'}).text
                 short_responsibility = raw_data.find('div', attrs={'data-qa': 'vacancy-serp__vacancy_snippet_responsibility'}).text
                 requirement = raw_data.find('div', attrs={'data-qa': 'vacancy-serp__vacancy_snippet_requirement'}).text
-                publication_date = raw_data.find('span', attrs={'class' : "vacancy-serp-item__publication-date"}).text
-                # Собираем данные в json формате
+                publication_date = raw_data.find('span', attrs={'class' : "vacancy-serp-item__publication-date"})
+                if publication_date:
+
+                    publication_date = publication_date.text
+
+                else:
+                    publication_date = 'Не указанно'
                 procces_data =  {
                                 'publication_date': publication_date,
                                 'title' : title,
