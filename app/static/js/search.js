@@ -1,9 +1,10 @@
 $(document).ready(function(){
-  var $input = $("#app input"),
-      $appendHere = $(".tagHere"),
-      oldKey = 0, newKey,
-      TABKEY = 9
-      data = [];
+  var $input          = $("#app input"),
+      $appendHere     = $(".tagHere"),
+      oldKey          = 0, newKey,
+      TABKEY          = 9,
+      ENTERKEY        = 13,
+      data            = [];
   $input.focus();
 
   $input.keydown(function(e){
@@ -12,7 +13,7 @@ $(document).ready(function(){
       if(e.preventDefault) {
         e.preventDefault();
         if($(this).val() == '' || $(this).val() == ' ') {
-          return false;
+          false;
         }
         data.push($(this).val());
         addTag($(this));
@@ -25,8 +26,7 @@ $(document).ready(function(){
       $(".tag:last-child").remove();
     }
 
-  })
-  $("#commit").on("click", function() {
+    if(e.keyCode == ENTERKEY) {
       var js_data = JSON.stringify(data);
       $.ajax({
           url: '/search',
@@ -40,7 +40,11 @@ $(document).ready(function(){
       }).fail(function(jqXHR, textStatus, errorThrown) {
           console.log("fail: ",textStatus, errorThrown);
       });
-  });
+
+    }
+
+  })
+  // BUG: удаляются все тэги.
   function addTag(element) {
     var $tag = $("<div />"), $a = $("<a href='' />"), $span = $("<span />");
     $tag.addClass('tag');
