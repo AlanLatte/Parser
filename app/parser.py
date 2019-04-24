@@ -82,7 +82,8 @@ def hh_parser(url: str, headers: dict, nums_of_answer: int):
 def write_json(file_name: str, data: dict):
     with open(f'{file_name}.json', mode='w', encoding='utf8') as outfile:
         json.dump(data, outfile, ensure_ascii=False, indent=2)
-def main():
+
+def get_data(search_data):
     """
         Структура url:
         https://hh.ru/search/vacancy    --  дефолт
@@ -92,12 +93,11 @@ def main():
         text={search}                   --  текст поиска
     """
     #Формируем запрос, преобразуем его в url-подобный тип
-    search = quote(input('Search: '))
+    search = quote(search_data)
 
     area        =   1
     period      =   7
     order_by    =   'publication_time'
-
     hh_parser  (
                 url=f'https://hh.ru/search/vacancy?order_by={order_by}&area={area}&search_period={period}&text={search}',
                 headers={
@@ -107,5 +107,4 @@ def main():
                 nums_of_answer=40
             )
 if __name__ == '__main__':
-    #   Вызываем main
-    main()
+    get_data(search_data='c++')
