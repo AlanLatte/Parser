@@ -18,7 +18,7 @@ def hh_parser(url: str, headers: dict, nums_of_answer: int):
         #Отправляем запрос, получаем ответ в виде html
         request = Session.get(url, headers=headers)
         data =  {
-                'status'        :   str()   ,
+                'status_request':   str()   ,
                 'timestamp'     :   int()   ,
                 'data_response' :   list()  ,
                 'quantity'      :   int()   ,
@@ -26,22 +26,22 @@ def hh_parser(url: str, headers: dict, nums_of_answer: int):
         data['timestamp'] = int(time.time())
         # Проверяем ответ сервера
         if request.status_code==200:
-            data['status'] = 'ok'
+            data['status_request'] = 'ok'
             # Извлекаем контент из request ответа
             soup = BeautifulSoup(request.content, 'html.parser')
             # Извлекаем из контента блок 'div' с артибутами attrs
             # TODO: Добавить поиск по divs_premium.
             divs = soup.find_all('div', attrs={'data-qa': 'vacancy-serp__vacancy'})
-            range_pages = soup.find_all('a', attrs={'class' : 'bloko-button HH-Pager-Control'})
-            for page in range_pages:
-                print(page.get('data-page'))
+            # range_pages = soup.find_all('a', attrs={'class' : 'bloko-button HH-Pager-Control'})
+            # for page in range_pages:
+            #     print(page.get('data-page'))
             for raw_data in divs:
                 # Извлекаем из пресонализированного тега данные, преобразуем в текст
                 title = raw_data.find('a',attrs={'data-qa': 'vacancy-serp__vacancy-title'}).text
                 #Извлекаем зп из html
                 wage = raw_data.find('div', attrs={'data-qa': 'vacancy-serp__vacancy-compensation'})
                 # Если зп не указанна, так и выводим
-                if wage != None:
+                if wage:
                     """
                         type wage   ==  bytes
                     """
@@ -64,17 +64,17 @@ def hh_parser(url: str, headers: dict, nums_of_answer: int):
                 else:
                     publication_date = 'Не указанно'
                 procces_data =  {
-                                'publication_date': publication_date,
-                                'title' : title,
-                                'wage' : wage,
-                                'company' : company,
-                                'short_responsibility' : short_responsibility,
-                                'url' : href
+                                'publication_date'      : publication_date,
+                                'title'                 : title,
+                                'wage'                  : wage,
+                                'company'               : company,
+                                'short_responsibility'  : short_responsibility,
+                                'url'                   : href
                                 }
                 # Добавляем в json
                 data['data_response'].append(procces_data)
         else:
-            data['status'] = 'false'
+            data['status_request'] = 'false'
     data['quantity'] = len(data['data_response'])
     write_json('data', data)
 
@@ -86,7 +86,7 @@ def main():
     """
         Структура url:
         https://hh.ru/search/vacancy    --  дефолт
-        order_by={order_by}             --  сортировка по дате
+        order_by={order_by}             --  сортировка ответа
         area={area}                     --  Размер ответа (0 -- максимум)
         search_period={period}          --  Период поиска
         text={search}                   --  текст поиска
