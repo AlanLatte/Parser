@@ -6,7 +6,7 @@ from urllib.parse import quote
 """ Change directory to current """
 os.chdir(os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))))
 
-def hh_parser(url: str, headers: dict, nums_of_answer: int):
+def hh_parser(url: str, headers: dict):
     """
         type url        ==  string
         type headers    ==  dict
@@ -74,7 +74,7 @@ def hh_parser(url: str, headers: dict, nums_of_answer: int):
                 # Добавляем в json
                 data['data_response'].append(procces_data)
         else:
-            data['status_request'] = 'false'
+            data['status_request'] = 'something wrong'
     data['quantity'] = len(data['data_response'])
     write_json('data', data)
 
@@ -91,20 +91,21 @@ def get_data(search_data):
         area={area}                     --  Размер ответа (0 -- максимум)
         search_period={period}          --  Период поиска
         text={search}                   --  текст поиска
+        items_on_page={nums_of_answer}  --  количество ответов
     """
     #Формируем запрос, преобразуем его в url-подобный тип
     search = quote(search_data)
 
-    area        =   1
-    period      =   7
-    order_by    =   'publication_time'
+    area            =   1
+    period          =   7
+    order_by        =   'publication_time'
+    nums_of_answer  =   100
     hh_parser  (
-                url=f'https://hh.ru/search/vacancy?order_by={order_by}&area={area}&search_period={period}&text={search}',
+                url=f'https://hh.ru/search/vacancy?order_by={order_by}&area={area}&search_period={period}&text={search}&items_on_page={nums_of_answer}',
                 headers={
                     'accept'     : '*/*',
                     'user-agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36'
-                        },
-                nums_of_answer=40
+                        }
             )
 if __name__ == '__main__':
     get_data(search_data='c++')
