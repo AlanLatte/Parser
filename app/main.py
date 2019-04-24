@@ -9,7 +9,8 @@ def create_app():
 def search_page():
     if request.method == 'POST':
         data = request.json
-        
+        print(data)
+
     return render_template('search.html')
 
 if __name__ == '__main__':
