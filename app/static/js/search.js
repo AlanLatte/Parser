@@ -26,7 +26,21 @@ $(document).ready(function(){
     }
 
   })
-
+  $("#commit").on("click", function() {
+      var js_data = JSON.stringify(data);
+      $.ajax({
+          url: '/search',
+          type : 'post',
+          contentType: 'application/json',
+          dataType : 'json',
+          data : js_data
+      }).done(function(result) {
+          console.log(result);
+          $("#data").html(result);
+      }).fail(function(jqXHR, textStatus, errorThrown) {
+          console.log("fail: ",textStatus, errorThrown);
+      });
+  });
   function addTag(element) {
     var $tag = $("<div />"), $a = $("<a href='' />"), $span = $("<span />");
     $tag.addClass('tag');

@@ -5,14 +5,12 @@ app = Flask(__name__)
 def create_app():
     return render_template('index.html')
 
-@app.route('/search')
+@app.route('/search', methods=["GET", "POST"])
 def search_page():
-    return render_template('search.html')
-
-def search():
     if request.method == 'POST':
-        if request.form['submit_button'] == 'submit':
-            print(request.args.get('data'))
+        data = request.json
+        
+    return render_template('search.html')
 
 if __name__ == '__main__':
     app.run()
