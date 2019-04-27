@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
-import os
-
-""" Change directory to current """
-os.chdir(os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))))
-
-import requests, json, time
+from flask import current_app as app
 from bs4 import BeautifulSoup
 from requests.utils import requote_uri as quote
+import os
+import requests
+import json
+import time
 
-
-def get_data(url: str, headers: dict):
+def main(url: str, headers: dict):
     """
         type url        ==  string
         type headers    ==  dict
@@ -80,10 +78,14 @@ def hh_parser(divs):
     write_json('data', data)
 
 def write_json(file_name: str, data: dict):
-    with open(f'{file_name}.json', mode='w', encoding='utf8') as outfile:
+    """
+        Сохранение данных
+    """
+
+    with open(os.path.join(app.config['DATA_BASE_STORAGE'], f'{file_name}.json'), mode='w', encoding='utf8') as outfile:
         json.dump(data, outfile, ensure_ascii=False, indent=2)
 
-def main(search_data):
+def get_data(search_data):
     """
         Структура url:
         https://hh.ru/search/vacancy    --  дефолт
@@ -101,7 +103,7 @@ def main(search_data):
     period          =   7
     order_by        =   'publication_time'
     nums_of_answer  =   100
-    get_data    (
+    main        (
                 url=f'{base}order_by={order_by}&area={area}&search_period={period}&text={search}&items_on_page={nums_of_answer}',
                 headers={
                     'accept'     : '*/*',
@@ -116,4 +118,4 @@ if __name__ == '__main__':
             'data_response' :   list()  ,
             'quantity'      :   int()   ,
             }
-    main(search_data='c++')
+    get_data(search_data='c++')
