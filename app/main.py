@@ -14,7 +14,7 @@ def index():
         g.error = None
         return redirect('/')
 
-@bp.route('/search', methods=["POST"])
+@bp.route('/search', methods=["GET", "POST"])
 def search_page():
     if request.method == 'POST':
         data = request.json
