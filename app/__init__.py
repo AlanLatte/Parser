@@ -6,7 +6,7 @@ from app.main import bp
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object(os.environ['APP_CONFIG'])
+    # app.config.from_object(os.environ['APP_CONFIG'])
     app.register_blueprint(bp)
 
     return app
