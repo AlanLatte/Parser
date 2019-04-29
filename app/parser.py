@@ -15,7 +15,7 @@ data =  {
         'quantity'      :   int()   ,
         }
 
-def main(url: str, headers: dict):
+def main(url: str, headers: dict, name: str):
     """
         type url        ==  string
         type headers    ==  dict
@@ -39,12 +39,14 @@ def main(url: str, headers: dict):
             divs_premium = soup.find_all('div', attrs={'data-qa': 'vacancy-serp__vacancy vacancy-serp__vacancy_premium'})
             divs         = soup.find_all('div', attrs={'data-qa': 'vacancy-serp__vacancy'})
             # TODO: Привести все к DRY.
-            hh_parser(divs = divs_premium)
-            hh_parser(divs = divs)
+            if divs_premium:
+                hh_parser(divs = divs_premium   , name = name)
+            if divs:
+                hh_parser(divs = divs           , name = name)
         else:
             data['status_request'] = 'something wrong'
 
-def hh_parser(divs):
+def hh_parser(divs, name):
     for raw_data in divs:
         # Извлекаем из пресонализированного тега данные, преобразуем в текст
         title = raw_data.find('a',attrs={'data-qa': 'vacancy-serp__vacancy-title'}).text
@@ -83,7 +85,7 @@ def hh_parser(divs):
         data['data_response'].append(procces_data)
 
     data['quantity'] = len(data['data_response'])
-    write_json('data', data)
+    write_json(file_name = name, data = data)
 
 def write_json(file_name: str, data: dict):
     """
@@ -117,7 +119,8 @@ def get_data(search_data):
                 headers={
                     'accept'     : '*/*',
                     'user-agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36'
-                        }
+                        },
+                name = search_data
                 )
 
 if __name__ == '__main__':
