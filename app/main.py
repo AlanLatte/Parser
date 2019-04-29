@@ -23,6 +23,9 @@ def search_page():
             parser.get_data(search_data=item)
 
     return render_template('search.html')
+@bp.route('/team')
+def render_team():
+    return render_template('team.html')
 
 if __name__ == '__main__':
     app.run()
