@@ -44,9 +44,8 @@ $(document).ready(function(){
     }
 
   })
-  // BUG: удаляются все тэги.
   function addTag(element) {
-    var $tag = $("<div />"), $a = $("<a href='' />"), $span = $("<span />");
+    var $tag = $("<div />"), $a = $("<a href='#' />"), $span = $("<span />");
     $tag.addClass('tag');
     $('<i class="fa fa-times" aria-hidden="true"></i>').appendTo($a);
     $span.text($(element).val());
