@@ -27,7 +27,15 @@ $(document).ready(function(){
     }
 
     if(e.keyCode == ENTERKEY) {
-      var js_data = JSON.stringify(data);
+      function unique(arr) {
+        var obj = {};
+        for (var i = 0; i < arr.length; i++) {
+          var str = arr[i];
+          obj[str] = true;
+        }
+        return Object.keys(obj);
+      }
+      var js_data = JSON.stringify(unique(data));
       $.ajax({
           url: '/search',
           type : 'post',
