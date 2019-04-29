@@ -1,4 +1,4 @@
-app/data.json
+*.json
 tests/
 
 

@@ -1,15 +1,26 @@
-from flask import Flask, render_template, request
-app = Flask(__name__)
+from flask import (Blueprint, render_template, request, g, redirect)
+from flask import current_app as app
 
-@app.route('/')
-def create_app():
-    return render_template('index.html')
+import app.parser as parser
 
-@app.route('/search', methods=["GET", "POST"])
+
+bp = Blueprint('main', __name__, url_prefix='/', static_folder='/static')
+
+@bp.route('/')
+def index():
+    try:
+        return render_template('index.html')
+    except AttributeError:
+        g.error = None
+        return redirect('/')
+
+@bp.route('/search', methods=["GET", "POST"])
 def search_page():
     if request.method == 'POST':
         data = request.json
         print(data)
+        for item in data:
+            parser.get_data(search_data=item)
 
     return render_template('search.html')
 
