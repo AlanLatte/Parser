@@ -7,6 +7,14 @@ import requests
 import json
 import time
 
+
+data =  {
+        'status_request':   str()   ,
+        'timestamp'     :   int()   ,
+        'data_response' :   list()  ,
+        'quantity'      :   int()   ,
+        }
+
 def main(url: str, headers: dict):
     """
         type url        ==  string
@@ -86,6 +94,7 @@ def write_json(file_name: str, data: dict):
         json.dump(data, outfile, ensure_ascii=False, indent=2)
 
 def get_data(search_data):
+
     """
         Структура url:
         https://hh.ru/search/vacancy    --  дефолт
@@ -112,10 +121,4 @@ def get_data(search_data):
                 )
 
 if __name__ == '__main__':
-    data =  {
-            'status_request':   str()   ,
-            'timestamp'     :   int()   ,
-            'data_response' :   list()  ,
-            'quantity'      :   int()   ,
-            }
     get_data(search_data='c++')
