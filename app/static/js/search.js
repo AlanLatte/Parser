@@ -53,13 +53,20 @@ $(document).ready(function(){
 
   })
   function addTag(element) {
-    var $tag = $("<div />"), $a = $("<a href='#' />"), $span = $("<span />");
+    var $tag = $("<div />"), $a = $("<a />"), $span = $("<span />");
     $tag.addClass('tag');
     $('<i class="fa fa-times" aria-hidden="true"></i>').appendTo($a);
     $span.text($(element).val());
     $a.bind('click', function(){
+      // TODO: Удаление объектов из массива
+      // var index = data.indexOf($(element));
+      // if (index > -1) {
+      //   data.splice(index, 1);
+      // }
       $(this).parent().remove();
       $(this).unbind('click');
+
+      $input.focus();
     });
     $a.appendTo($tag);
     $span.appendTo($tag);
