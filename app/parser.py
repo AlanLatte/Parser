@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import current_app as app
 from bs4 import BeautifulSoup
-from requests.utils import requote_uri as quote
+from urllib.parse import quote
 import os
 import requests
 import json
@@ -15,7 +15,7 @@ data =  {
         'quantity'      :   int()   ,
         }
 
-def main(url: str, headers: dict, name: str):
+def main(url: str, headers: dict):
     """
         type url        ==  string
         type headers    ==  dict
@@ -40,13 +40,13 @@ def main(url: str, headers: dict, name: str):
             divs         = soup.find_all('div', attrs={'data-qa': 'vacancy-serp__vacancy'})
             # TODO: Привести все к DRY.
             if divs_premium:
-                hh_parser(divs = divs_premium   , name = name)
+                hh_parser(divs = divs_premium   )
             if divs:
-                hh_parser(divs = divs           , name = name)
+                hh_parser(divs = divs           )
         else:
             data['status_request'] = 'something wrong'
 
-def hh_parser(divs, name):
+def hh_parser(divs):
     for raw_data in divs:
         # Извлекаем из пресонализированного тега данные, преобразуем в текст
         title = raw_data.find('a',attrs={'data-qa': 'vacancy-serp__vacancy-title'}).text
@@ -83,9 +83,8 @@ def hh_parser(divs, name):
                         }
         # Добавляем в json
         data['data_response'].append(procces_data)
-
     data['quantity'] = len(data['data_response'])
-    write_json(file_name = name, data = data)
+
 
 def write_json(file_name: str, data: dict):
     """
@@ -95,33 +94,32 @@ def write_json(file_name: str, data: dict):
     with open(os.path.join(app.config['DATA_BASE_STORAGE'], f'{file_name}.json'), mode='w', encoding='utf8') as outfile:
         json.dump(data, outfile, ensure_ascii=False, indent=2)
 
-def get_data(search_data):
-
+def get_data(search_data, name):
     """
         Структура url:
         https://hh.ru/search/vacancy    --  дефолт
         order_by={order_by}             --  сортировка ответа
         area={area}                     --  Размер ответа (0 -- максимум)
-        search_period={period}          --  Период поиска
         text={search}                   --  текст поиска
         items_on_page={nums_of_answer}  --  количество ответов
     """
-    #Формируем запрос, преобразуем его в url-подобный тип
-    search = quote(search_data)
 
+    #Генерируем все необходимые данные для создания ссылки
+    search = '+'.join(quote(item.lower()) for item in search_data)
     base            =   'https://hh.ru/search/vacancy?'
     area            =   1
-    period          =   7
     order_by        =   'publication_time'
     nums_of_answer  =   100
-    main        (
-                url=f'{base}order_by={order_by}&area={area}&search_period={period}&text={search}&items_on_page={nums_of_answer}',
+    #создаем вспомогательные данные
+
+    main(
+                url    =f'{base}order_by={order_by}&area={area}&text={search}&items_on_page={nums_of_answer}',
                 headers={
                     'accept'     : '*/*',
                     'user-agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36'
-                        },
-                name = search_data
+                        }
                 )
+    write_json(file_name = name, data = data)
 
 if __name__ == '__main__':
-    get_data(search_data='c++')
+    get_data(search_data='c++', name = '')
