@@ -20,6 +20,12 @@ styleCircle();
 addCircle();
 addLinks();
 styleLinks();
+clear_cookies();
+
+
+function clear_cookies(){
+  document.cookie = "name=;"
+}
 
 function styleCircle() {
   circle.style.border= borderSize+'px solid #d6e5ff';
