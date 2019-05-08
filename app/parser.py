@@ -65,7 +65,11 @@ def hh_parser(divs):
         # Извлекаем контент
         # TODO: Переработать сбор информации.
         href = raw_data.find('a', attrs={'data-qa': 'vacancy-serp__vacancy-title'}).get('href')
-        company = raw_data.find('a', attrs={'data-qa': 'vacancy-serp__vacancy-employer'}).text
+        company = raw_data.find('a', attrs={'data-qa': 'vacancy-serp__vacancy-employer'})
+        if company:
+            company = company.text
+        else:
+            company = 'Не указанно'
         short_responsibility = raw_data.find('div', attrs={'data-qa': 'vacancy-serp__vacancy_snippet_responsibility'}).text
         requirement = raw_data.find('div', attrs={'data-qa': 'vacancy-serp__vacancy_snippet_requirement'}).text
         publication_date = raw_data.find('span', attrs={'class' : "vacancy-serp-item__publication-date"})
