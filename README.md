@@ -7,8 +7,4 @@
   $flask run
 ```
 ---
-## Contributors:
-| GitHub | Telegram |
-| :------: | :--------: |
-|[AlanLatte](https://github.com/AlanLatte) | [@Alanlatte](https://t.me/Alanlatte/)
-|[GAAdel](https://github.com/GAAdel)| __NONE__ |
+__Made by: [@Alanlatte](https://t.me/Alanlatte/)__
