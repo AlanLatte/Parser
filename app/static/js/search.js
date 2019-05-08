@@ -22,10 +22,10 @@ $(document).ready(function(){
       }
       return false;
     }
-
-    if($(this).val() == '' && e.keyCode === 8) {
-      $(".tag:last-child").remove();
-    }
+    // TODO: Удаление из массива
+    // if($(this).val() == '' && e.keyCode === 8) {
+    //   $(".tag:last-child").remove();
+    // }
 
     if(e.keyCode == ENTERKEY) {
       if (data.length > 0) {
