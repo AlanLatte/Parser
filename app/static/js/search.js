@@ -39,7 +39,7 @@ $(document).ready(function(){
         }
         var js_data = JSON.stringify(unique(data));
         $.ajax({
-          url: '/search',
+          url: request_result,
           type : 'post',
           contentType: 'application/json',
           dataType : 'json',
