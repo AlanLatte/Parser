@@ -16,6 +16,7 @@ data =  {
         }
 
 def main(url: str, headers: dict):
+    data['data_response'].clear()
     """
         type url        ==  string
         type headers    ==  dict
