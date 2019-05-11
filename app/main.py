@@ -4,10 +4,7 @@ from flask          import current_app as app
 
 from app.parser     import get_data as parser
 
-from os import mkdir
 bp  =   Blueprint('main', __name__, url_prefix='/', static_folder='/static')
-
-
 
 @bp.route('/')
 def index_page():
@@ -17,20 +14,26 @@ def index_page():
 def search_page():
     return render_template('search.html')
 
-@bp.route('/request-result', methods=['POST'])
+# TODO: изменить POST на GET
+# request.args.get flask в помощь.
+@bp.route('/request-result', methods=["POST"])
 def request_result():
+    """
+        request_data : list()
+        name         : str()
+    """
     request_data     = request.json
     name             =  '_'.join(sub_name for sub_name in request_data)
     parser  (
                 search_data     =   request_data,
                 name            =   name
             )
-    # return redirect(f'/download-result/{name}.txt')
-    return redirect("https://google.com")
+    return redirect(url_for('main.download_page', file_name=name, _method="GET"))
 
-@bp.route('/download-result/<path:file_name>')
-def result_page(file_name):
-    return send_from_directory(app.config['DATA_BASE_STORAGE'], file_name, as_attachment=True)
+@bp.route('/download-result/<path:file_name>', methods=["GET"])
+def download_page(file_name):
+    if request.method == "GET":
+        return send_from_directory(app.config['DATA_BASE_STORAGE'], f'{file_name}.txt', as_attachment=True)
 
 
 if __name__ == '__main__':
