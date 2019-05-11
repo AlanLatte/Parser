@@ -75,6 +75,7 @@ def write_json(file_name: str, data: str):
         outfile.write(data)
 
 def get_data(search_data, name):
+    global long_data
     """
         Структура url:
         https://hh.ru/search/vacancy    --  дефолт
@@ -85,20 +86,23 @@ def get_data(search_data, name):
     """
 
     #Генерируем все необходимые данные для создания ссылки
-    search          = '+'.join(quote(item.lower()) for item in search_data)
+
     base            =   'https://hh.ru/search/vacancy?'
     area            =   1
     order_by        =   'publication_time'
-    nums_of_answer  =   100
+    nums_of_answer  =   10
     #создаем вспомогательные данные
-
-    main    (
-                url    =f'{base}order_by={order_by}&area={area}&text={search}&items_on_page={nums_of_answer}',
-                headers={
-                    'accept'     : '*/*',
-                    'user-agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36'
-                        }
-                )
+    for search_item in search_data:
+        long_data += f'------{search_item}------\n'
+        search      =   quote(search_item)
+        main    (
+                    url    =f'{base}order_by={order_by}&area={area}&text={search}&items_on_page={nums_of_answer}',
+                    headers={
+                        'accept'     : '*/*',
+                        'user-agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36'
+                            }
+                    )
     write_json(file_name=name, data=long_data)
+    
 if __name__ == '__main__':
     get_data(search_data='c++', name = '')
