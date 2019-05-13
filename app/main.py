@@ -33,7 +33,7 @@ def request_result():
 @bp.route('/download-result/<path:file_name>', methods=["GET"])
 def download_page(file_name):
     if request.method == "GET":
-        return send_from_directory(app.config['DATA_BASE_STORAGE'], f'{file_name}.txt', as_attachment=True)
+        return send_from_directory(app.config['DATA_BASE_STORAGE'], f'{file_name}.txt', as_attachment=False)
 
 
 if __name__ == '__main__':
