@@ -35,6 +35,9 @@ def download_page(file_name):
     if request.method == "GET":
         return send_from_directory(app.config['DATA_BASE_STORAGE'], f'{file_name}.txt', as_attachment=False)
 
+@bp.route('/team', methods=["GET"])
+def team_page():
+    return render_template('team.html')
 
 if __name__ == '__main__':
     app.run()
