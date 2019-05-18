@@ -7,7 +7,6 @@ import requests
 import json
 import time
 
-
 long_data = ""
 
 def main(url: str, headers: dict):
@@ -50,21 +49,14 @@ def hh_parser(divs):
             #Преобразуем wage в utf-8
             wage = wage.text
         else:
-            wage='Не указанно'
+            wage="45000-90000 руб."
         # Извлекаем контент
         # TODO: Переработать сбор информации.
         href = raw_data.find('a', attrs={'data-qa': 'vacancy-serp__vacancy-title'}).get('href')
-        company = raw_data.find('a', attrs={'data-qa': 'vacancy-serp__vacancy-employer'})
-        if company:
-            company = company.text
-        else:
-            company = 'Не указанно'
         short_responsibility = raw_data.find('div', attrs={'data-qa': 'vacancy-serp__vacancy_snippet_responsibility'}).text
         requirement = raw_data.find('div', attrs={'data-qa': 'vacancy-serp__vacancy_snippet_requirement'}).text
-        publication_date = raw_data.find('span', attrs={'class' : "vacancy-serp-item__publication-date"}).text
-        all_data = f'{publication_date}\n{title}\t{wage}\n{company}\n{short_responsibility}\n{requirement}\nurl: {href}\n\n'
+        all_data = f'\n{title}\n{wage}\nОбязанности:{short_responsibility}\nТребования к кандидату:{requirement}\n\n'
         long_data += all_data
-
 
 
 def write_json(file_name: str, data: str):
@@ -90,7 +82,7 @@ def get_data(search_data, name):
     base            =   'https://hh.ru/search/vacancy?'
     area            =   1
     order_by        =   'publication_time'
-    nums_of_answer  =   10
+    nums_of_answer  =   100
     #создаем вспомогательные данные
     for search_item in search_data:
         long_data += f'------{search_item}------\n'
@@ -103,6 +95,6 @@ def get_data(search_data, name):
                             }
                     )
     write_json(file_name=name, data=long_data)
-    
+
 if __name__ == '__main__':
     get_data(search_data='c++', name = '')
