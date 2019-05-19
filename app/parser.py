@@ -7,7 +7,6 @@ import requests
 import json
 import time
 
-long_data = ""
 
 def main(url: str, headers: dict):
     """
@@ -58,15 +57,14 @@ def hh_parser(divs):
         all_data = f'\n{title}\n{wage}\nОбязанности:{short_responsibility}\nТребования к кандидату:{requirement}\n\n'
         long_data += all_data
 
-
-def write_json(file_name: str, data: str):
+def write_file(file_name: str, data: str):
     """
         Сохранение данных
     """
     with open(os.path.join(app.config['DATA_BASE_STORAGE'], f'{file_name}.txt'), mode='w', encoding='utf8') as outfile:
         outfile.write(data)
 
-def get_data(search_data, name):
+def get_data(search_data, name, get_all_tags=False):
     global long_data
     """
         Структура url:
@@ -79,22 +77,29 @@ def get_data(search_data, name):
 
     #Генерируем все необходимые данные для создания ссылки
 
+    long_data       =   str()
     base            =   'https://hh.ru/search/vacancy?'
     area            =   1
     order_by        =   'publication_time'
     nums_of_answer  =   100
+    headers = {
+        'User-Agent': "PostmanRuntime/7.11.0",
+        'Accept': "*/*",
+        'Connection': "keep-alive",
+        'cache-control': "no-cache"
+        }
     #создаем вспомогательные данные
     for search_item in search_data:
         long_data += f'------{search_item}------\n'
         search      =   quote(search_item)
         main    (
                     url    =f'{base}order_by={order_by}&area={area}&text={search}&items_on_page={nums_of_answer}',
-                    headers={
-                        'accept'     : '*/*',
-                        'user-agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36'
-                            }
+                    headers = headers
                     )
-    write_json(file_name=name, data=long_data)
+    if get_all_tags == True:
+        return long_data
+    else:
+        write_file(file_name=name, data=long_data)
 
 if __name__ == '__main__':
-    get_data(search_data='c++', name = '')
+    get_data(search_data='c++', name = '', get_all_tags=False)
