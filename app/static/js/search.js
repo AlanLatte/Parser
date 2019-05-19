@@ -6,6 +6,7 @@ $(document).ready(function(){
       ENTERKEY        = 13,
       data            = [],
       index           = 0;
+
   $input.focus();
 
   $input.keydown(function(e){
@@ -22,11 +23,6 @@ $(document).ready(function(){
       }
       return false;
     }
-    // TODO: Удаление из массива
-    // if($(this).val() == '' && e.keyCode === 8) {
-    //   $(".tag:last-child").remove();
-    // }
-
     if(e.keyCode == ENTERKEY) {
       if (data.length > 0) {
         function unique(arr) {
@@ -35,15 +31,17 @@ $(document).ready(function(){
             var str = arr[i];
             obj[str] = true;
           }
-          return Object.keys(obj);
+          return ""+Object.keys(obj);
         }
-        var js_data = JSON.stringify(unique(data));
+        var js_data = unique(data);
         $.ajax({
-          url: '/search',
-          type : 'post',
+          url: request_result,
+          type : 'GET',
           contentType: 'application/json',
           dataType : 'json',
-          data : js_data
+          data :  {
+                    data : js_data
+                  }
         }).done(function(result) {
           console.log(result);
           $("#data").html(result);
@@ -51,9 +49,24 @@ $(document).ready(function(){
           console.log("fail: ",textStatus, errorThrown);
         });
       }
-      // window.location.replace(result_url)
+      for (var item = 0; item < data.length; item++) {
+        download_page+=data[item]
+        if (data.length - item != 1){
+          download_page+="_"
+        }
+
+      }
+      wait(5000);
+      window.location.replace(download_page)
+      download_page='/download-result/';
     }
   })
+  function wait(ms) {
+    var d = new Date();
+    var d2 = null;
+    do { d2 = new Date(); }
+    while(d2-d < ms);
+  }
   function addTag(element) {
     var $tag = $("<div />"), $a = $("<a />"), $span = $("<span />");
     $tag.addClass('tag');

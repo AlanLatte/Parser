@@ -1,61 +1,55 @@
-from flask          import  (Blueprint, render_template, request, g, redirect,
-                            url_for, make_response, Response, session)
-from flask          import current_app as app
+from flask          import (Blueprint, render_template, request, redirect,
+                            url_for, send_from_directory)
+from flask          import current_app  as app
 
-from app.parser     import get_data as parser
+from app.parser     import get_data     as parser
+from app.all_tags   import all_tags
 
-from json           import load
-from os             import listdir
-from time           import time
 
 bp  =   Blueprint('main', __name__, url_prefix='/', static_folder='/static')
 
 @bp.route('/')
 def index_page():
-
     return render_template('index.html')
 
-@bp.route('/search', methods=["GET", "POST"])
+@bp.route('/search', methods=["GET"])
 def search_page():
-    response                     = make_response(redirect(url_for('main.result_page')))
-    # TODO: c++_java != java_c++ // NEED FIX
-    if request.method == 'POST':
-        request_data             = request.json
-        if request_data:
-            name                 =  '_'.join(sub_name for sub_name in request_data)
-            DATA_BASE_STORAGE    = app.config['DATA_BASE_STORAGE']
-            list_of_dir_DBS      = tuple(listdir(DATA_BASE_STORAGE))
-            response.set_cookie(key = "name", value = name)
-            if f'{name}.json' in list_of_dir_DBS:
-                with open(f'{DATA_BASE_STORAGE}/{name}.json', encoding='utf8') as json_file:
-                    data         = load(json_file)
-                    current_time = int(time())
-                    timestamp    = data['timestamp']
-                    if current_time - timestamp > 7200:
-                        parser  (
-                                    search_data     =   request_data,
-                                    name            =   name
-                                )
-                        return response
-                    else:
-                        return response
-            else:
-                parser  (
-                            search_data     =   request_data,
-                            name            =   name
-                        )
-                return response
-    return render_template('search.html', result_url='/search/result')
+    return render_template('search.html')
 
-@bp.route('/search/result')
-def result_page():
-    # TODO: Work with POST api
-    name = request.cookies.get("name")
-    # if (name != None) and (name != ''):
-    return f'<h1>{name}</h1>'
-    # return redirect('/search'
+@bp.route('/request-result', methods=["GET"])
+def request_result():
+    """
+        request_data : list()
+        name         : str()
+    """
+    request_data     =  request.args.get('data').split(',')
+    name             =  '_'.join(sub_name for sub_name in request_data)
+    parser  (
+                search_data     =   request_data,
+                name            =   name
+            )
+    return redirect(url_for('main.download_page', file_name=name, _method="GET"))
 
-@bp.route('/team')
+@bp.route('/download-result/<path:file_name>', methods=["GET"])
+def download_page(file_name):
+    if request.method == "GET":
+        try:
+            return send_from_directory(app.config['DATA_BASE_STORAGE'], f'{file_name}.txt', as_attachment=True)
+        except:
+            return redirect(url_for('.main.search_page'))
+
+@bp.route('/search/all_tags', methods=["GET"])
+def all_tags_page():
+    name            = 'DATA_OF_ALL_TAGS'
+    FILE_OF_TAGS    = 'TAGS'
+    all_tags(
+                file_name = name,
+                FILE_OF_TAGS = FILE_OF_TAGS
+            )
+    return redirect(url_for('main.download_page', file_name=name, _method="GET"))
+
+
+@bp.route('/team', methods=["GET"])
 def team_page():
     return render_template('team.html')
 
