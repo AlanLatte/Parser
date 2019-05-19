@@ -1,6 +1,6 @@
 var links = [{label: 'Search'   , bg: '#7db4ce', href: '/search'},
              {label: 'How use?' , bg: '#4568c2', href: '/how'},
-             {label: 'Github'   , bg: '#817ec1', href: '/github'},
+             {label: 'Github'   , bg: '#817ec1', href: 'https://github.com/AlanLatte/Parser'},
              {label: 'Team'     , bg: '#7b9788', href: '/team'},
              {label: 'Features' , bg: '#8cc3c1', href: '/features'},
              {label: 'About'    , bg: '#985aba', href: '/about'},
@@ -20,6 +20,12 @@ styleCircle();
 addCircle();
 addLinks();
 styleLinks();
+clear_cookies();
+
+
+function clear_cookies(){
+  document.cookie = "name=;"
+}
 
 function styleCircle() {
   circle.style.border= borderSize+'px solid #d6e5ff';
