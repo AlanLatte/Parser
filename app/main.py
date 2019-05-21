@@ -16,6 +16,26 @@ def index_page():
 def search_page():
     return render_template('search.html')
 
+@bp.route('/team', methods=["GET"])
+def team_page():
+    return render_template('team.html')
+
+@bp.route('/how', methods=["GET"])
+def how_page():
+    return render_template('how_to_use.html')
+
+@bp.route('/features', methods=["GET"])
+def features_page():
+    return render_template('features.html')
+
+@bp.route('/about', methods=["GET"])
+def about_page():
+    return render_template('about.html')
+
+@bp.route('/contacts', methods=["GET"])
+def contacts_page():
+    return render_template('contacts.html')
+
 @bp.route('/request-result', methods=["GET"])
 def request_result():
     """
@@ -48,10 +68,6 @@ def all_tags_page():
             )
     return redirect(url_for('main.download_page', file_name=name, _method="GET"))
 
-
-@bp.route('/team', methods=["GET"])
-def team_page():
-    return render_template('team.html')
 
 if __name__ == '__main__':
     app.run()
