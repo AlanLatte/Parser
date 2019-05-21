@@ -56,7 +56,9 @@ $(document).ready(function(){
         }
 
       }
-      wait(5000);
+      // TODO: Переделать данную технологию
+      wait(4000);
+      alert("Файл готов для скачивания.")
       window.location.replace(download_page)
       download_page='/download-result/';
     }
