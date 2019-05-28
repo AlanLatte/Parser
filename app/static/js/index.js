@@ -3,6 +3,7 @@ var links = [{label: 'Поиск'   , bg: '#7db4ce', href: '/search'},
              {label: 'Команда'     , bg: '#7b9788', href: '/team'},
              {label: 'Перспективы' , bg: '#8cc3c1', href: '/features'},
              {label: 'О нас'    , bg: '#985aba', href: '/about'},
+             {label: 'Помощь'    , bg: '#64C7FF', href: '/how'},
              {label: 'Контакты' , bg: '#106669', href: '/contacts'}];
 var windowHeight = window.innerHeight;
 if(windowHeight === 0) windowHeight = 238;
