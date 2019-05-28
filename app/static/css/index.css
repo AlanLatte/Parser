@@ -1,8 +1,8 @@
-@import url(https://fonts.googleapis.com/css?family=Roboto:400,700);
+@import url("https://fonts.googleapis.com/css?family=Open+Sans&display=swap");
 
 body {
   background: #c0392b;
-  /* font-family: 'Roboto',sans-serif; */
+  font-family: 'Open Sans', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   -webkit-backface-visibility: hidden;
