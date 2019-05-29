@@ -10,9 +10,19 @@
 </head>
 <body>
   <div id = "content">
-    <h1>How To Use</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore, optio quos accusamus. Vel nulla quas distinctio ullam aliquid nisi eos sint quae explicabo, similique, voluptates sunt maiores ab, repellat aspernatur! Earum vitae nostrum repellendus sed neque odit veritatis dignissimos cumque reiciendis incidunt, esse alias eaque dolorem ducimus aliquam temporibus perspiciatis. Perferendis eveniet iure maiores consectetur ullam cum fuga, eos quibusdam. Quasi molestiae mollitia ipsum voluptatem tempore eum maxime unde quam aliquam similique nostrum quisquam voluptatum beatae numquam modi, quidem ipsa. Quis, vel, in. Repellat, voluptatum, tempora. Nam voluptatibus, officiis temporibus cum vel enim provident eum ipsam, earum dolore harum ipsum?</p>
-         <img src="https://www.stickbutik.ru/upload/iblock/ee6/ee641a11362255d7916693b5e085df64.png" alt="">
-  </div>
-</body>
-</html>
+    <h1>Руководство пользователя</h1>
+    <p>
+      Привет! Мы рады видеть тебя в нашем веб-приложении! Сейчас я расскажу тебе как им пользоваться!)<br>
+      <br>
+      Если ты знаешь технологии и тебя интересует кем ты сможешь работать, то тебе во вкладку «<a href="url_for('main.search_page')">Поиск</a>». Вводи свои технологии через Tab (слева на клавиатуре, иногда бывают стрелочками), и нажми Enter! Тебе скачается файл с вакансиями! Открывай и смотри!)<br>
+      <br>
+      Если тебе интересно почитать о проекте, то тебе во вкладку «О нас». Там ты найдешь много интересного о нашем проекте и почему мы за него взялись.
+      Можешь заглянуть во вкладку «<a href="url_for('main.team_page')">Команда</a>», там все мы (ну почти все) с контактами! Код нашего проекта хранится в открытом доступе на «<a href="https://github.com/AlanLatte/Parser">Github</a>»!<br>
+      <br>
+
+      Если тебе понравился наш проект, и у тебя есть желание нас поддержать, есть вкладка «<a href="{{ url_for('main.contacts_page') }}">Контакты</a>»
+    </p>
+      <img src="https://www.stickbutik.ru/upload/iblock/ee6/ee641a11362255d7916693b5e085df64.png" alt="">
+    </div>
+  </body>
+  </html>
