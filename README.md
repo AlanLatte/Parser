@@ -7,4 +7,8 @@
   $flask run
 ```
 ---
+## Special functions
+- [Search by all tags](http://127.0.0.1/all_tags) ``` http://127.0.0.1/all_tags ```
+
+---
 __Made by: [@Alanlatte](https://t.me/Alanlatte/)__
